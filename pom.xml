@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This piece of work is to enhance personahub project functionality.        ~
+  ~                                                                           ~
+  ~ Author:    eomisore                                                       ~
+  ~ File:      pom.xml                                                        ~
+  ~ Created:   15/11/2025, 23:14                                              ~
+  ~ Modified:  15/11/2025, 23:17                                              ~
+  ~                                                                           ~
+  ~ Copyright (c)  2025.  Aerosimo Ltd                                        ~
+  ~                                                                           ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a   ~
+  ~ copy of this software and associated documentation files (the "Software"),~
+  ~ to deal in the Software without restriction, including without limitation ~
+  ~ the rights to use, copy, modify, merge, publish, distribute, sublicense,  ~
+  ~ and/or sell copies of the Software, and to permit persons to whom the     ~
+  ~ Software is furnished to do so, subject to the following conditions:      ~
+  ~                                                                           ~
+  ~ The above copyright notice and this permission notice shall be included   ~
+  ~ in all copies or substantial portions of the Software.                    ~
+  ~                                                                           ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,           ~
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES           ~
+  ~ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                  ~
+  ~ NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT                ~
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,              ~
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING              ~
+  ~ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE                ~
+  ~ OR OTHER DEALINGS IN THE SOFTWARE.                                        ~
+  ~                                                                           ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.aerosimo.ominet</groupId>
+    <artifactId>personahub</artifactId>
+    <version>1.0.0</version>
+
+    <packaging>war</packaging>
+
+    <name>PersonaHub | Aerosimo Ltd</name>
+    <description>A central hub or unified service for all personal identity data. It is a secure, aggregated source of truth for individual records.</description>
+    <url>https://www.aerosimo.com</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>${project.artifactId}</distribution>
+            <comments>
+                Copyright 2025 Aerosimo, Permission is hereby granted, free of charge, to any person obtaining a
+                copy of this software and associated documentation files (the "Software"), to deal in the Software
+                without restriction, including without limitation the rights to use, copy, modify, merge, publish,
+                distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+                is furnished to do so, subject to the following conditions:The above copyright notice and this
+                permission notice shall be included in all copies or substantial portions of the Software.
+
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+                INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+                AND NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+                DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+            </comments>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Aerosimo Ltd</name>
+        <url>https://aerosimo.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>eomisore</id>
+            <name>Elijah Omisore</name>
+            <email>elijah@aerosimo.com</email>
+            <url>https://www.aerosimo.com</url>
+            <organization>Aerosimo Ltd</organization>
+            <organizationUrl>https://www.aerosimo.com</organizationUrl>
+            <timezone>BST</timezone>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/aerosimo/personahub.git</url>
+        <connection>git@github.com/aerosimo/personahub.git</connection>
+        <developerConnection>https://github.com/aerosimo/personahub.git</developerConnection>
+    </scm>
+
+    <properties>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.dependency.version>3.8.1</maven.dependency.version>
+        <maven.resources.version>3.3.1</maven.resources.version>
+        <maven.javadoc.version>3.12.0</maven.javadoc.version>
+        <maven.release.version>3.1.1</maven.release.version>
+        <maven.surefire.version>3.5.4</maven.surefire.version>
+        <maven.compiler.version>3.14.1</maven.compiler.version>
+        <maven.assembly.version>3.7.1</maven.assembly.version>
+        <maven.install.version>3.1.4</maven.install.version>
+        <maven.deploy.version>3.1.4</maven.deploy.version>
+        <maven.antrun.version>3.1.0</maven.antrun.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <maven.clean.version>3.5.0</maven.clean.version>
+        <maven.jar.version>3.4.2</maven.jar.version>
+        <maven.war.version>3.4.0</maven.war.version>
+        <jdbc.version>23.9.0.25.07</jdbc.version>
+        <jakarta.version>10.0.0</jakarta.version>
+        <servlet.version>6.1.0</servlet.version>
+        <jersey.version>3.1.11</jersey.version>
+        <log4j.version>2.25.1</log4j.version>
+        <jstl.version>3.0.1</jstl.version>
+        <jws.version>3.0.0</jws.version>
+        <rs.version>4.0.0</rs.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>${jakarta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>${rs.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
+            <version>${jws.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>${jws.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+            <version>${jdbc.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <directory>${project.basedir}/target</directory>
+        <outputDirectory>${project.build.directory}/classes</outputDirectory>
+        <testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven.clean.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven.war.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven.install.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${maven.antrun.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven.assembly.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven.dependency.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven.release.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven.deploy.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven.javadoc.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <reporting>
+        <outputDirectory>${project.build.directory}/site</outputDirectory>
+    </reporting>
+
+</project>
