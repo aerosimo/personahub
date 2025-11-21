@@ -83,7 +83,7 @@ public class AuthCore {
             Request request = new Request.Builder()
                     .url(AUTHCORE_BASE_URL)
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("X-Service-Signature", generateHmac(json))
+                    // .addHeader("X-Service-Signature", generateHmac(json))
                     .post(RequestBody.create(json, MediaType.parse("application/json")))
                     .build();
 
