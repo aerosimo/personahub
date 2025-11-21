@@ -34,12 +34,14 @@ package com.aerosimo.ominet.dao.impl;
 public class APIResponseDTO {
 
     private String status;
+    private String message;
 
     public APIResponseDTO() {
     }
 
-    public APIResponseDTO(String status) {
+    public APIResponseDTO(String status, String message) {
         this.status = status;
+        this.message = message;
     }
 
     public String getStatus() {
@@ -50,10 +52,19 @@ public class APIResponseDTO {
         this.status = status;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "APIResponseDTO{" +
                 "status='" + status + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }

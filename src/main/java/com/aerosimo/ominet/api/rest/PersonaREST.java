@@ -31,6 +31,7 @@
 
 package com.aerosimo.ominet.api.rest;
 
+import com.aerosimo.ominet.core.model.AuthCore;
 import com.aerosimo.ominet.dao.impl.APIResponseDTO;
 import com.aerosimo.ominet.dao.impl.ImageRequestDTO;
 import com.aerosimo.ominet.dao.impl.ImageResponseDTO;
@@ -51,90 +52,142 @@ public class PersonaREST {
 
     private static final Logger log = LogManager.getLogger(PersonaREST.class);
 
+    // -------------------------------------------------------------
+    //  Upload Avatar (Multipart)
+    // -------------------------------------------------------------
     @POST
     @Path("/avatarupload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response uploadAvatar(
+            @HeaderParam("Authorization") String authHeader,
             @FormDataParam("username") String username,
             @FormDataParam("file") InputStream fileInputStream) {
+
+        if (!validateToken(authHeader)) {
+            return unauthorizedResponse();
+        }
         if (fileInputStream == null || username == null) {
             log.error("Missing required fields for upload avatar");
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Missing required fields").build();
+                    .entity(new APIResponseDTO("unsuccessful", "missing required fields"))
+                    .build();
         }
         APIResponseDTO result = PersonaDAO.saveImage(username, fileInputStream);
-        if ("success".equalsIgnoreCase(result.getStatus())) {
-            return Response.ok(result).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new APIResponseDTO("unsuccessful")).build();
-        }
+        return buildResponse(result);
     }
 
+    // -------------------------------------------------------------
+    //  Upload Avatar (Base64 JSON)
+    // -------------------------------------------------------------
     @POST
     @Path("/avatartransfer")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response uploadAvatarJson(ImageRequestDTO dto) {
+    public Response uploadAvatarJson(
+            @HeaderParam("Authorization") String authHeader,
+            ImageRequestDTO dto) {
+        if (!validateToken(authHeader)) {
+            return unauthorizedResponse();
+        }
         if (dto == null || dto.getUsername() == null || dto.getAvatar() == null) {
             log.error("Missing required fields for avatar transfer");
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new APIResponseDTO("missing required fields")).build();
+                    .entity(new APIResponseDTO("unsuccessful", "missing required fields"))
+                    .build();
         }
         try {
-            // Strip metadata if present (e.g., "data:image/png;base64,")
             String base64Data = dto.getAvatar().contains(",")
                     ? dto.getAvatar().split(",")[1]
                     : dto.getAvatar();
             byte[] imageBytes = Base64.getDecoder().decode(base64Data);
             InputStream avatarStream = new ByteArrayInputStream(imageBytes);
             APIResponseDTO result = PersonaDAO.saveImage(dto.getUsername(), avatarStream);
-            if ("success".equalsIgnoreCase(result.getStatus())) {
-                return Response.ok(result).build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(new APIResponseDTO("unsuccessful")).build();
-            }
+            return buildResponse(result);
         } catch (IllegalArgumentException e) {
-            log.error("Invalid base64 image format");
+            log.error("Invalid base64 image format", e);
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new APIResponseDTO("invalid base64 image format")).build();
+                    .entity(new APIResponseDTO("unsuccessful", "invalid base64 image format"))
+                    .build();
         }
     }
 
+    // -------------------------------------------------------------
+    // Delete Avatar
+    // -------------------------------------------------------------
     @DELETE
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAvatar(@PathParam("username") String username) {
+    public Response deleteAvatar(
+            @HeaderParam("Authorization") String authHeader,
+            @PathParam("username") String username) {
+        if (!validateToken(authHeader)) {
+            return unauthorizedResponse();
+        }
         if (username == null || username.isEmpty()) {
-            log.error("username is required for deletion");
+            log.error("Username is required for deletion");
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new APIResponseDTO("email is required for deletion")).build();
+                    .entity(new APIResponseDTO("unsuccessful", "username is required"))
+                    .build();
         }
         APIResponseDTO result = PersonaDAO.removeImage(username);
-        if ("success".equalsIgnoreCase(result.getStatus())) {
-            return Response.ok(result).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new APIResponseDTO("unsuccessful")).build();
-        }
+        return buildResponse(result);
     }
 
+    // -------------------------------------------------------------
+    // Get Avatar
+    // -------------------------------------------------------------
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAvatar(@PathParam("username") String username) {
-        log.info("Received avatar fetch request for {}", username);
-        if (username == null) {
+    public Response getAvatar(
+            @HeaderParam("Authorization") String authHeader,
+            @PathParam("username") String username) {
+        if (!validateToken(authHeader)) {
+            return unauthorizedResponse();
+        }
+        if (username == null || username.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new APIResponseDTO("username is required")).build();
+                    .entity(new APIResponseDTO("unsuccessful", "username is required"))
+                    .build();
         }
         ImageResponseDTO imageDTO = PersonaDAO.getImage(username);
         if (imageDTO == null || imageDTO.getAvatar() == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(new APIResponseDTO("no image found")).build();
+                    .entity(new APIResponseDTO("unsuccessful", "no image found"))
+                    .build();
         }
         return Response.ok(imageDTO).build();
     }
 
+    /* ----------------- Helper Methods ----------------- */
+
+    private boolean validateToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("Missing or invalid Authorization header");
+            return false;
+        }
+        String token = authHeader.substring("Bearer ".length()).trim();
+        boolean valid = AuthCore.validateToken(token);
+        if (!valid) {
+            log.warn("Token validation failed for token: {}", token);
+        }
+        return valid;
+    }
+
+    private Response unauthorizedResponse() {
+        return Response.status(Response.Status.UNAUTHORIZED)
+                .entity(new APIResponseDTO("unsuccessful", "invalid or expired token"))
+                .build();
+    }
+
+    private Response buildResponse(APIResponseDTO result) {
+        if ("success".equalsIgnoreCase(result.getStatus())) {
+            return Response.ok(result).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new APIResponseDTO("unsuccessful", result.getMessage()))
+                    .build();
+        }
+    }
 }

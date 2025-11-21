@@ -113,11 +113,15 @@
         <maven.clean.version>3.5.0</maven.clean.version>
         <maven.jar.version>3.4.2</maven.jar.version>
         <maven.war.version>3.4.0</maven.war.version>
+        <caffeine.version>3.2.3</caffeine.version>
         <jdbc.version>23.9.0.25.07</jdbc.version>
         <jakarta.version>10.0.0</jakarta.version>
+        <jackson.version>3.0.2</jackson.version>
         <servlet.version>6.1.0</servlet.version>
         <jersey.version>3.1.11</jersey.version>
         <log4j.version>2.25.1</log4j.version>
+        <http3.version>4.12.0</http3.version>
+        <okio.version>3.9.0</okio.version>
         <jstl.version>3.0.1</jstl.version>
         <jws.version>3.0.0</jws.version>
         <rs.version>4.0.0</rs.version>
@@ -198,6 +202,31 @@
             <groupId>org.glassfish.web</groupId>
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>${jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${http3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <version>${okio.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.2</version>
         </dependency>
     </dependencies>
 

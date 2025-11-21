@@ -67,17 +67,17 @@ public class PersonaDAO {
             response = stmt.getString(8);
             if(response.equalsIgnoreCase("success")){
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"address detail saved successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"address detail not saved");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (SAVE ADDRESS)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (SAVE ADDRESS): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -99,17 +99,17 @@ public class PersonaDAO {
             response = stmt.getString(5);
             if(response.equalsIgnoreCase("success")){
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"contact detail saved successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"contact detail not saved");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (SAVE CONTACT)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (SAVE CONTACT): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -129,17 +129,17 @@ public class PersonaDAO {
             response = stmt.getString(3);
             if(response.equalsIgnoreCase("success")){
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"image saved successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"image not saved");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (SAVE IMAGE)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (SAVE IMAGE): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -165,17 +165,17 @@ public class PersonaDAO {
             response = stmt.getString(8);
             if(response.equalsIgnoreCase("success")){
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"person detail saved successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"person detail not saved successfully");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (SAVE PERSON)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (SAVE PERSON): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -333,17 +333,17 @@ public class PersonaDAO {
             response = stmt.getString(2);
             if (response.equalsIgnoreCase("success")) {
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"address detail removed successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"address detail not removed successfully");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (DELETE ADDRESS)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (DELETE ADDRESS): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -363,17 +363,17 @@ public class PersonaDAO {
             response = stmt.getString(3);
             if (response.equalsIgnoreCase("success")) {
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"contact detail removed successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"contact detail not removed successfully");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (DELETE CONTACT)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (DELETE CONTACT): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -392,17 +392,17 @@ public class PersonaDAO {
             response = stmt.getString(2);
             if (response.equalsIgnoreCase("success")) {
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"image removed successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"image not removed successfully");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (DELETE IMAGE)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (DELETE IMAGE): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -421,17 +421,17 @@ public class PersonaDAO {
             response = stmt.getString(2);
             if (response.equalsIgnoreCase("success")) {
                 response = "success";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"person detail removed successfully");
             } else {
                 response = "unsuccessful";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO(response,"person detail not removed successfully");
             }
         } catch (SQLException err) {
             log.error("Error in identification_pkg (DELETE PERSON)", err);
             try {
                 Spectre.recordError("TE-20001", "Error in identification_pkg (DELETE PERSON): " + err.getMessage(), PersonaDAO.class.getName());
                 response = "internal server error";
-                return new APIResponseDTO(response);
+                return new APIResponseDTO("error",response);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
