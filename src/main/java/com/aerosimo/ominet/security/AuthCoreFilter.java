@@ -31,32 +31,77 @@
 
 package com.aerosimo.ominet.security;
 
+import com.aerosimo.ominet.dao.impl.APIResponseDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 
-@WebFilter("/profile/*")
 public class AuthCoreFilter implements Filter {
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
 
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ") ||
-                !AuthCore.validateToken(authHeader.substring(7).trim())) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"status\":\"unauthorized\",\"message\":\"Invalid or expired token\"}");
+    private static final Logger log = LogManager.getLogger(AuthCoreFilter.class.getName());
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // Initialization logic if needed
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        log.info("AuthCoreFilter invoked for {}", ((HttpServletRequest) request).getRequestURI());
+
+        if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
+            chain.doFilter(request, response);
             return;
         }
-        chain.doFilter(req, res);
+
+        HttpServletRequest httpReq = (HttpServletRequest) request;
+        HttpServletResponse httpResp = (HttpServletResponse) response;
+
+        String authHeader = httpReq.getHeader("Authorization");
+        log.info("Authentication header received {}", authHeader);
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            unauthorized(httpResp);
+            return;
+        }
+
+        String token = authHeader.substring("Bearer ".length()).trim();
+
+        boolean valid = AuthCore.validateToken(token);
+
+        if (!valid) {
+            unauthorized(httpResp);
+            return;
+        }
+
+        // Token is valid, continue to the REST endpoint
+        chain.doFilter(request, response);
+    }
+
+    private void unauthorized(HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        log.info(resp.getWriter().toString());
+        APIResponseDTO apiResp = new APIResponseDTO("unauthorized", "Invalid or expired token");
+        resp.getWriter().write(mapper.writeValueAsString(apiResp));
+    }
+
+    @Override
+    public void destroy() {
+        // Cleanup if needed
     }
 }

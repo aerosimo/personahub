@@ -41,12 +41,16 @@ import okhttp3.Response;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.aerosimo.ominet.dao.impl.APIResponseDTO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AuthCore {
+
+    private static final Logger log = LogManager.getLogger(AuthCore.class.getName());
 
     private static final String AUTHCORE_BASE_URL =
             "https://ominet.aerosimo.com:9443/authcore/api/auth/validate";
@@ -72,6 +76,7 @@ public class AuthCore {
 
     public static boolean validateToken(String token) {
         if (token == null || token.trim().isEmpty()) {
+            log.error("Invalid token");
             return false;
         }
         // 1. Check cache
@@ -84,12 +89,14 @@ public class AuthCore {
             Map<String, String> payload = new HashMap<>();
             payload.put("token", token);
             String json = mapper.writeValueAsString(payload);
+            log.info("Sending request {} to server endpoint {}",json, AUTHCORE_BASE_URL);
             Request request = new Request.Builder()
                     .url(AUTHCORE_BASE_URL)
                     .post(RequestBody.create(json, JSON))
                     .addHeader("Content-Type", "application/json")
                     .build();
             try (Response response = http.newCall(request).execute()) {
+                log.info(response.body().string());
                 if (!response.isSuccessful()) {
                     System.err.println("AuthCore HTTP error: " + response.code());
                     tokenCache.put(token, false);

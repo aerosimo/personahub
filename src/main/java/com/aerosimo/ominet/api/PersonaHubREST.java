@@ -52,18 +52,21 @@ public class PersonaHubREST {
 
     /* -------------------- Common Response Helpers -------------------- */
     private Response missingUsername() {
+        log.error("Missing username parameter");
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(new APIResponseDTO("unsuccessful", "username is required"))
                 .build();
     }
 
     private Response badRequest(String message) {
+        log.error("Bad request parameter: " + message);
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(new APIResponseDTO("unsuccessful", message))
                 .build();
     }
 
     private Response okOrBad(APIResponseDTO resp) {
+        log.info("OK or Bad request parameter: " + resp);
         return "success".equalsIgnoreCase(resp.getStatus())
                 ? Response.ok(resp).build()
                 : Response.status(Response.Status.BAD_REQUEST).entity(resp).build();
