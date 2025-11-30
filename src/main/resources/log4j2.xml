@@ -34,7 +34,7 @@
 <Configuration status="TRACE">
     <!-- ========= Properties ========= -->
     <Properties>
-        <property name="baseLogDir">/opt/logs/personahub</property>
+        <property name="baseLogDir">/u03/logs/personahub</property>
         <property name="fileyear">${date:yyyy}</property>
         <property name="filemonth">${date:MMMM}</property>
         <property name="fileday">${date:ddMMyyyy}</property>
