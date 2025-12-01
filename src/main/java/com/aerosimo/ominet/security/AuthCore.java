@@ -75,6 +75,7 @@ public class AuthCore {
             .build();
 
     public static boolean validateToken(String token) {
+        log.info("Token to consider is {}", token);
         if (token == null || token.trim().isEmpty()) {
             log.error("Invalid token");
             return false;
@@ -96,7 +97,6 @@ public class AuthCore {
                     .addHeader("Content-Type", "application/json")
                     .build();
             try (Response response = http.newCall(request).execute()) {
-                log.info(response.body().string());
                 if (!response.isSuccessful()) {
                     System.err.println("AuthCore HTTP error: " + response.code());
                     tokenCache.put(token, false);
@@ -108,8 +108,8 @@ public class AuthCore {
                     return false;
                 }
                 String body = response.body().string();
+                log.info("Response body is {}", body);
                 APIResponseDTO dto = mapper.readValue(body, APIResponseDTO.class);
-                // expected: dto.status = "success" or "successful"
                 boolean valid =
                         "success".equalsIgnoreCase(dto.getStatus()) ||
                                 "successful".equalsIgnoreCase(dto.getStatus());

@@ -59,12 +59,12 @@ public class AuthCoreFilter implements ContainerRequestFilter {
         log.info("AuthCoreRequestFilter invoked for {} with header {}",
                 ctx.getUriInfo().getPath(), authHeader);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.toLowerCase().startsWith("bearer ")) {
             abort(ctx, "Missing or invalid Authorization header");
             return;
         }
-
-        String token = authHeader.substring("Bearer ".length()).trim();
+        String token = authHeader.substring(7).trim();
+        log.info("Token: {}", token);
         boolean valid = AuthCore.validateToken(token);
 
         if (!valid) {
