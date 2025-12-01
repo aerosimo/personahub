@@ -33,15 +33,6 @@
 
 <web-app>
     <display-name>PersonaHub | Aerosimo Ltd</display-name>
-    <filter>
-        <filter-name>AuthCoreFilter</filter-name>
-        <filter-class>com.aerosimo.ominet.security.AuthCoreFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AuthCoreFilter</filter-name>
-        <url-pattern>/profile/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

@@ -32,76 +32,52 @@
 package com.aerosimo.ominet.security;
 
 import com.aerosimo.ominet.dao.impl.APIResponseDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.annotation.Priority;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-public class AuthCoreFilter implements Filter {
+@Provider
+@Priority(Priorities.AUTHENTICATION)
+
+public class AuthCoreFilter implements ContainerRequestFilter {
 
     private static final Logger log = LogManager.getLogger(AuthCoreFilter.class.getName());
 
-    private static final ObjectMapper mapper = new ObjectMapper();
-
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        // Initialization logic if needed
-    }
-
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        log.info("AuthCoreFilter invoked for {}", ((HttpServletRequest) request).getRequestURI());
-
-        if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        HttpServletRequest httpReq = (HttpServletRequest) request;
-        HttpServletResponse httpResp = (HttpServletResponse) response;
-
-        String authHeader = httpReq.getHeader("Authorization");
-        log.info("Authentication header received {}", authHeader);
+    public void filter(ContainerRequestContext ctx) throws IOException {
+        String authHeader = ctx.getHeaderString(HttpHeaders.AUTHORIZATION);
+        log.info("AuthCoreRequestFilter invoked for {} with header {}",
+                ctx.getUriInfo().getPath(), authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            unauthorized(httpResp);
+            abort(ctx, "Missing or invalid Authorization header");
             return;
         }
 
         String token = authHeader.substring("Bearer ".length()).trim();
-
         boolean valid = AuthCore.validateToken(token);
 
         if (!valid) {
-            unauthorized(httpResp);
-            return;
+            abort(ctx, "Invalid or expired token");
         }
-
-        // Token is valid, continue to the REST endpoint
-        chain.doFilter(request, response);
+        // else continue to resource
     }
 
-    private void unauthorized(HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        log.info(resp.getWriter().toString());
-        APIResponseDTO apiResp = new APIResponseDTO("unauthorized", "Invalid or expired token");
-        resp.getWriter().write(mapper.writeValueAsString(apiResp));
-    }
-
-    @Override
-    public void destroy() {
-        // Cleanup if needed
+    private void abort(ContainerRequestContext ctx, String message) {
+        APIResponseDTO apiResp = new APIResponseDTO("unauthorized", message);
+        ctx.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(apiResp)
+                .build());
     }
 }
