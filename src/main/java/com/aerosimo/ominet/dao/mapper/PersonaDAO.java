@@ -158,7 +158,7 @@ public class PersonaDAO {
             stmt.setString(4, middleName);
             stmt.setString(5, lastName);
             stmt.setString(6, gender);
-            stmt.setString(7, birthday);
+            stmt.setDate(7, java.sql.Date.valueOf(birthday));
             stmt.registerOutParameter(8, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(8);
