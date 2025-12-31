@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/profile")
 public class PersonaHubREST {
@@ -231,5 +232,15 @@ public class PersonaHubREST {
     public Response removePerson(APIRequestDTO req) {
         if (req == null || req.getUsername() == null) return missingUsername();
         return okOrBad(PersonaDAO.removePerson(req.getUsername()));
+    }
+
+    /* ======================= METRICS ======================= */
+    @GET
+    @Path("/metrics/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMetrics(@PathParam("username") String username) {
+        if (username == null || username.isEmpty()) return missingUsername();
+        APIResponseDTO resp = PersonaDAO.getMetrics(username);
+        return Response.ok(resp).build();
     }
 }

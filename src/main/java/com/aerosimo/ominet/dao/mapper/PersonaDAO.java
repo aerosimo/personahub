@@ -431,4 +431,33 @@ public class PersonaDAO {
             }
         }
     }
+
+    public static APIResponseDTO getMetrics(String username) {
+        log.info("Preparing to retrieve user profile completion");
+        String response;
+        String sql = "{call identification_pkg.metrics(?,?)}";
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+            stmt.setString(1, username);
+            stmt.registerOutParameter(2, OracleTypes.CURSOR);
+            stmt.execute();
+            response = stmt.getString(2);
+            if (response.startsWith("Profile completion")) {
+                return new APIResponseDTO("success",response);
+            } else {
+                response = "unsuccessful";
+                return new APIResponseDTO(response,"no data found");
+            }
+        } catch (SQLException err) {
+            log.error("Error in identification_pkg (GET METRICS)", err);
+            try {
+                Spectre.recordError("TE-20001", "Error in identification_pkg (GET METRICS): " + err.getMessage(), PersonaDAO.class.getName());
+                response = "internal server error";
+                return new APIResponseDTO("error",response);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }
