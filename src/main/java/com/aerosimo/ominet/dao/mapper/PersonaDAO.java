@@ -442,12 +442,7 @@ public class PersonaDAO {
             stmt.registerOutParameter(2, OracleTypes.CURSOR);
             stmt.execute();
             response = stmt.getString(2);
-            if (response.startsWith("Profile completion")) {
-                return new APIResponseDTO("success",response);
-            } else {
-                response = "unsuccessful";
-                return new APIResponseDTO(response,"no data found");
-            }
+            return new APIResponseDTO("success",response);
         } catch (SQLException err) {
             log.error("Error in identification_pkg (GET METRICS)", err);
             try {
