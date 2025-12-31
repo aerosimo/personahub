@@ -440,7 +440,7 @@ public class PersonaDAO {
         try (Connection con = Connect.dbase();
              CallableStatement stmt = con.prepareCall(sql)) {
             stmt.setString(1, username);
-            stmt.registerOutParameter(2, OracleTypes.CURSOR);
+            stmt.registerOutParameter(2, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(2);
             if (response.equalsIgnoreCase("unsuccessful")) {
